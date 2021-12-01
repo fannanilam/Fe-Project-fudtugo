@@ -81,6 +81,7 @@ function Home() {
           <Col lg={5} style={{ marginTop: "30px", paddingLeft: "100px" }}>
             <img
               src="/assets/homeFoto.jpeg"
+              alt="home"
               className="rounded"
               style={{ height: "400px", width: "410px" }}
             />
@@ -101,6 +102,7 @@ function Home() {
           <Col lg={6}>
             <img
               src="/assets/sopBuntut.png"
+              alt="home2"
               className="rounded"
               style={{ height: "430px", width: "360px", paddingTop: "120px" }}
             />

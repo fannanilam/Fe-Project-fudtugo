@@ -29,13 +29,13 @@ const MutationDelete = gql`
 `;
 
 const MutationDeleteAllCart = gql`
-mutation DeleteAllCart {
-  delete_cart(where: {id: {_gt: 1}}) {
-    returning {
-      id
+  mutation DeleteAllCart($ids: [Int!]!) {
+    delete_cart(where: { id: { _in: $ids } }) {
+      returning {
+        id
+      }
     }
   }
-}
 `;
 
 const MutationUpdateQuantity = gql`
@@ -56,16 +56,16 @@ function Cart() {
   const { data, loading, error } = useQuery(QUERY);
   const [
     deleteCart,
-    { data: dataDelete, loading: loadingDelete, error: errorDelete },
+    { loading: loadingDelete, error: errorDelete },
   ] = useMutation(MutationDelete, { refetchQueries: [QUERY] });
   const [
     deleteAllCart,
-    { data: dataDeleteAll, loading: loadingDeleteAll, error: errorDeleteAll },
+    { loading: loadingDeleteAll, error: errorDeleteAll },
   ] = useMutation(MutationDeleteAllCart, { refetchQueries: [QUERY] });
   const [updateCart, { loading: loadingupdate, error: errorupdate }] =
     useMutation(MutationUpdateQuantity, { refetchQueries: [QUERY] });
   const [totalHarga, setTotalHarga] = useState(0);
-  const [cart, setCart] = useState("");
+
   useEffect(() => {
     const total = data?.cart.reduce((prev, current) => {
       const totaltmp = current.quantity * current.menuCart.harga;
@@ -79,8 +79,18 @@ function Cart() {
       variables: { id },
     });
   };
-  const deleteallCart = (e) => {
-    setCart(e.target.value);
+  const deleteallCart = () => {
+    const ids = data?.cart.map((v) => {
+      return v.id;
+    });
+    deleteAllCart({
+      variables: { ids },
+    });
+    Swal.fire({
+      icon: "success",
+      title: "Order Success!",
+      text: "Sit tight, we're placing your order :)",
+    });
   };
   const tambahItem = (id) => {
     updateCart({
@@ -88,7 +98,8 @@ function Cart() {
     });
   };
 
-  if (loading || loadingDelete || loadingupdate || loadingDeleteAll) return <LoadingSvg />;
+  if (loading || loadingDelete || loadingupdate || loadingDeleteAll)
+    return <LoadingSvg />;
 
   if (error || errorDelete || errorupdate || errorDeleteAll) {
     console.log(error);
@@ -107,15 +118,12 @@ function Cart() {
         </h2>
         <Row>
           <Col lg={8}>
-            <table className="table table-warning table-hover" >
+            <table className="table table-warning table-hover">
               <tbody>
                 {data.cart.map((v) => {
                   console.log(v);
                   return (
                     <tr key={v.id}>
-                      <td>
-                        <img src={v.menuCart.img} style={{ height: "5rem" }} />
-                      </td>
                       <td>{v.menuCart.nama}</td>
                       <td>@Rp.{v.menuCart.harga}</td>
                       <td>
@@ -125,8 +133,9 @@ function Cart() {
                       </td>
                       <td>
                         <Button
-                          variant="outline-warning" style={{marginRight:"30px"}}
-                          onClick={() => (v.id, v.quantity - 1)}
+                          variant="outline-warning"
+                          style={{ marginRight: "30px" }}
+                          onClick={() => (v.id)}
                         >
                           -
                         </Button>
@@ -138,14 +147,15 @@ function Cart() {
                           +
                         </Button>
                         <Button
-                          className="btn btn-danger ms-2" 
+                          className="btn btn-danger ms-2"
                           onClick={() => hapusCart(v.id)}
                         >
                           delete
                         </Button>
                       </td>
-                      <td >
-                        Subtotal:<br/>
+                      <td>
+                        Subtotal:
+                        <br />
                         Rp. {v.menuCart.harga * v.quantity}
                       </td>
                     </tr>
@@ -154,8 +164,17 @@ function Cart() {
               </tbody>
             </table>
           </Col>
-          <Col lg={4} style={{backgroundColor:"#FDCC83", height:"400px", borderRadius:"10px"}}>
-            <h3 style={{fontFamily:"Roboto Slab", marginTop:"20px"}}>Total Price: Rp. {totalHarga}</h3>
+          <Col
+            lg={4}
+            style={{
+              backgroundColor: "#FDCC83",
+              height: "400px",
+              borderRadius: "10px",
+            }}
+          >
+            <h3 style={{ fontFamily: "Roboto Slab", marginTop: "20px" }}>
+              Total Price: Rp. {totalHarga}
+            </h3>
           </Col>
           <Col>
             <Button variant="outline-warning" style={{ marginRight: "950px" }}>
@@ -166,16 +185,7 @@ function Cart() {
                 Continue Order
               </Link>
             </Button>
-            <Button
-              className="btn btn-warning m-2"
-              onClick={() => deleteallCart}
-                // Swal.fire({
-                //   icon: "success",
-                //   title: "Order Success!",
-                //   text: "Sit tight, we're placing your order :)",
-                // })
-              
-            >
+            <Button className="btn btn-warning m-2" onClick={deleteallCart}>
               Check Out Now
             </Button>
           </Col>

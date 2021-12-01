@@ -1,7 +1,7 @@
 import React from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import "./navbar.css";
-import { BsFacebook, BsTwitter, BsInstagram } from 'react-icons/bs';
+import { BsFacebook, BsTwitter, BsInstagram } from "react-icons/bs";
 
 export default function Footer() {
   return (
@@ -30,9 +30,9 @@ export default function Footer() {
             <p style={{ textAlign: "center" }}>
               Best cooks and best delivery guys at all your services.
             </p>
-            <BsFacebook style={{marginLeft:"30px", marginRight:"10px"}}/>
-            <BsTwitter style={{ marginRight:"10px"}}/>
-            <BsInstagram/>
+            <BsFacebook style={{ marginLeft: "30px", marginRight: "10px" }} />
+            <BsTwitter style={{ marginRight: "10px" }} />
+            <BsInstagram />
           </Col>
           <Col md="4">
             <h5 style={{ fontFamily: "Roboto Slab", textAlign: "left" }}>
@@ -89,7 +89,7 @@ export default function Footer() {
         </Row>
       </Container>
       <Container fluid style={{ backgroundColor: "#f8b147", height: "50px" }}>
-        <a style={{ marginLeft: "500px" }}> Copyright 2021 Fanna Nilam </a>
+        <p style={{ marginLeft: "500px",  }}> Copyright 2021 Fanna Nilam </p>
       </Container>
     </footer>
   );

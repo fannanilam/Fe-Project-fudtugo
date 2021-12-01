@@ -10,7 +10,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { gql, useQuery, useMutation } from "@apollo/client";
 import CardMenu from "../components/cardmenu";
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import LoadingSvg from "./LoadingSvg";
 import { QUERY } from "./Cart.js";
 
@@ -68,13 +67,24 @@ const Menu = () => {
   const [updateCart, { loading: loadingupdate, error: errorupdate }] =
     useMutation(MutationUpdateQuantity, { refetchQueries: [QUERY] });
   const [search, setSearch] = useState("");
-  // const [cartMenu, setCartMenu] = useState("");
 
   const handleSearch = (e) => {
+    data?.Menu.filter((menu)=>{
+      if(menu.nama.toLowerCase().includes(search.toLowerCase())){
+        return true
+      }else{
+        return false
+      }
+    }).map((menu)=>{
+      return <Menu id={menu.id} nama={menu.nama} harga={menu.harga} img={menu.img} rating={menu.rating} />
+    });
+    data?.Menu.map((menu)=>{
+      return <Menu id={menu.id} nama={menu.nama} harga={menu.harga} img={menu.img} rating={menu.rating}/>
+    });
     const value = e.target.value;
     setSearch(value);
   };
- 
+
   const handleButton = (v) => {
     const exist = datacart?.cart.find((cart) => cart.cartMenu === v.id);
     if (exist) {
@@ -117,24 +127,8 @@ const Menu = () => {
             className="me-2"
             aria-label="Search"
           />
-          {/* {search?
-            data?.Menu.filter((menu)=>{
-              if(menu.nama.toLowerCase().includes(search.toLowerCase())){
-                return true
-              }else{
-                return false
-              }
-            }).map((menu)=>{
-              return <Menu id={menu.id} nama={menu.nama} harga={menu.harga} img={menu.img} rating={menu.rating} />
-            })
-            :
-            data?.Menu.map((menu)=>{
-              return <Menu id={menu.id} nama={menu.nama} harga={menu.harga} img={menu.img} rating={menu.rating}/>
-            })} */}
-          <Button variant="warning">
-            <Link to="/menu" style={{ textDecoration: "None", color: "black" }}>
+          <Button variant="warning" style={{ textDecoration: "None", color: "black" }}>
               Search
-            </Link>
           </Button>
         </Form>
       </Container>

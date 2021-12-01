@@ -20,6 +20,7 @@ function Aboutus() {
         <br />
         <img
           src="/assets/homeFoto.jpeg"
+          alt="description"
           class="rounded"
           style={{ height: "360px", width: "365px" }}
         />

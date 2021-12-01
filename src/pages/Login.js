@@ -21,7 +21,7 @@ const QueryLogin = gql`
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [doLogin, { data: dataGet, loading: loadingGet, error: errorGet }] =
+  const [doLogin, {loading: loadingGet, error: errorGet }] =
     useLazyQuery(QueryLogin, {
       onCompleted: (data) => {
         if (data.user?.length > 0) {
